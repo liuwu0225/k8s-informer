@@ -1,7 +1,6 @@
 import * as k8s from '@kubernetes/client-node';
 
 import { ListWatch } from './cache';
-import { KubeConfig } from './config';
 import { KubernetesObject } from './types';
 
 import http = require('http');
@@ -25,7 +24,7 @@ export interface Informer<T> {
 }
 
 export function makeInformer<T>(
-    kubeconfig: KubeConfig,
+    kubeconfig: k8s.KubeConfig,
     path: string,
     listPromiseFn: ListPromise<T>,
 ): Informer<T> {

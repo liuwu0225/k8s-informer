@@ -1,7 +1,7 @@
 import * as k8s from '@kubernetes/client-node';
 import { ADD, DELETE, ERROR, Informer, ListPromise, ObjectCallback, UPDATE } from './informer';
 import { KubernetesObject } from './types';
-import { Watch } from './watch';
+import _ from "lodash"
 
 export interface ObjectCache<T> {
     get(name: string, namespace?: string): T | undefined;
@@ -16,7 +16,7 @@ export class ListWatch<T extends KubernetesObject> implements ObjectCache<T>, In
 
     public constructor(
         private readonly path: string,
-        private readonly watch: Watch,
+        private readonly watch: k8s.Watch,
         private readonly listFn: ListPromise<T>,
         autoStart: boolean = true,
     ) {
@@ -86,11 +86,11 @@ export class ListWatch<T extends KubernetesObject> implements ObjectCache<T>, In
         const promise = this.listFn();
         const result = await promise;
         const list = result.body;
-        deleteItems(this.objects, list.items, this.callbackCache[DELETE].slice());
-        this.addOrUpdateItems(list.items);
+        deleteItems(this.objects, _.get(list, "items", []), this.callbackCache[DELETE].slice());
+        this.addOrUpdateItems(_.get(list, "items", []));
         await this.watch.watch(
             this.path,
-            { resourceVersion: list.metadata!.resourceVersion },
+            { resourceVersion:  _.get(list, "metadata.resourceVersion", "") },
             this.watchHandler.bind(this),
             this.doneHandler.bind(this),
         );
