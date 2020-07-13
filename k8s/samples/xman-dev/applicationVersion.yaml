@@ -1,0 +1,11 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4demo-2.0.0
+spec:
+  application: x4demo
+  version: 2.0.0
+  worker:
+    image: deploy-milestones.docker.repositories.sap.ondemand.com/com.sap.x4/x4-samples:2.0.0
+  content:
+    image: deploy-milestones.docker.repositories.sap.ondemand.com/com.sap.x4/x4-samples:2.0.0

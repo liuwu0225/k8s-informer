@@ -1,0 +1,59 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-app
+spec:
+  # baf application artifacts
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  # saasregistry:
+  #   serviceInstance: saasregservice
+  database:
+    from: component
+    value: bafdb
+  uaa:
+    from: secret
+    value: uaaservice
+  auditlog:
+    from: secret
+    value: auditlogservice
+  # destination:
+  #   serviceInstance: destinationservice
+  # transportation:
+  #   serviceInstance: transportationservice
+  # certificateservice:
+  #   serviceInstance: certificateservice
+  # ...
+  # baf appliction components
+  components:
+    - name: bafredis
+      type: redis
+      image: redis:5.0.9
+    - name: bafdb
+      type: postgres
+      image: docker.wdf.sap.corp:50000/com.sap.x4/xman-db:0.0.1
+    - name: lockmanager01
+      type: lockmanager
+      image: docker.wdf.sap.corp:50000/com.sap.x4/x4-lock-manager:1.1.5
+      redis:
+        from: component
+        value: bafredis
+    - name: jobmanager01
+      type: jobmanager
+      image: docker.wdf.sap.corp:50000/com.sap.x4/x4-job-manager:1.1.0
+      database:
+        from: component
+        value: bafdb
+  gateway:
+    host: x4-bc.local
+  supportUsers:
+    - SAP_SUPP001
+    - SAP_SUPP002
+    - SAP_SUPP003
+  imagePullSecrets:
+    - cred
+  configuration: {}

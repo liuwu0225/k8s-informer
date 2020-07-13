@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: xman-post-upgrade-job
+spec:
+  template:
+    metadata:
+      name: xman-post-upgrade-template
+    spec:
+      restartPolicy: Never
+      serviceAccount: xman-operator
+      serviceAccountName: xman-operator
+      containers:
+        - name: post-upgrade-job
+          image: xman:latest
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "npm run postUpgrade"]
+          envFrom:
+            - configMapRef:
+                name: xman-app-config
+          env:
+            - name: K8S_MODE
+              value: cluster
+            - name: PORT
+              value: "3000"
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: host
+                  name: xman-pg-secret
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: port
+                  name: xman-pg-secret
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: database
+                  name: xman-pg-secret
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: xman-pg-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: xman-pg-secret
+            - name: DB_SSL_REQUIRED
+              valueFrom:
+                secretKeyRef:
+                  key: sslRequired
+                  name: xman-pg-secret
+            - name: CERT_PEM
+              valueFrom:
+                secretKeyRef:
+                  key: cert.pem
+                  name: perf-sidecar-injector-webhook-certs
+            - name: KEY_PEM
+              valueFrom:
+                secretKeyRef:
+                  key: key.pem
+                  name: perf-sidecar-injector-webhook-certs

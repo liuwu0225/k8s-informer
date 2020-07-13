@@ -1,0 +1,51 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-app
+spec:
+  components:
+    - name: lockmanager01
+      type: lockmanager
+      image: docker.wdf.sap.corp:50000/com.sap.x4/x4-lock-manager:1.1.5
+      database:
+        secretName: lockmanSecret
+    - name: jobmanager01
+      type: jobmanager
+      image: docker.wdf.sap.corp:50000/com.sap.x4/x4-job-manager:1.1.0
+      database:
+        secretName: jobmanSecret
+  serviceInstances:
+    - name: uaaservice01
+      serviceName: xsuaa
+      servicePlan: basic
+      parameters: {}
+  gateway:
+    hosts:
+      - x4-bc.local
+    tls:
+      credentialName: bookinfo-secret
+  jobmanager:
+    component: jobmanager01
+  lockmanager:
+    component: lockmanager01
+  approuter:
+    image: ""
+    env:
+      -
+    uaa:
+      serviceInstance: uaaservice
+  database:
+    system:
+      serviceInstance: bafSystemSecret
+    repository:
+      serviceInstance: bafRepoSecret
+  supportUsers:
+    - SAP_SUPP001
+    - SAP_SUPP002
+    - SAP_SUPP003
+  vcapSecret: ""
+  imagePullSecrets:
+    - cred
+  env:
+    -
+  configuration: {}

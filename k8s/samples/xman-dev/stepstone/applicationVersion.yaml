@@ -1,0 +1,23 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: stepstone-1.1.1
+spec:
+  application: stepstone
+  version: 1.1.1
+  worker:
+    image: big.docker.repositories.sap.ondemand.com/internal-x4-stepstone:xman-test
+  content:
+    image: big.docker.repositories.sap.ondemand.com/internal-x4-stepstone:xman-test
+  env:
+    - name: VCAP_SERVICES
+      valueFrom:
+        secretKeyRef:
+          name: x4demo-vcap-secret
+          key: content.json
+    - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+      value: "true"
+  # supportTickets:
+  #   - ticket0001
+  # approuter:
+  #   image: build-milestones.docker.repositories.sap.ondemand.com/com.sap.html5.apps/approuter-6.7:6.7.0

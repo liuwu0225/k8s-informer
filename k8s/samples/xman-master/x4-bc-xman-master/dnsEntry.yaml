@@ -1,0 +1,11 @@
+apiVersion: dns.gardener.cloud/v1alpha1
+kind: DNSEntry
+metadata:
+  name: x4-bc-wildcard
+  namespace: x4-bc-xman-master
+spec:
+  dnsName: "*.x4-bc-xman-master.x4-sample-master.xman.eu.one.cloud.sap"
+  ttl: 600
+  cnameLookupInterval: 30
+  targets:
+    - public-ingress.xman-master.clusters.eu.one.cloud.sap

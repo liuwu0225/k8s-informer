@@ -1,0 +1,15 @@
+{{- if (.Values.serviceCatalog.enabled)}}
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: xman-pg-service-instance
+spec:
+{{- if (eq .Values.serviceCatalog.provider "azure")}}
+  clusterServiceClassExternalName: azure-postgresql-10
+  clusterServicePlanExternalName: general-purpose-cssc
+{{- end }}
+{{- if (eq .Values.serviceCatalog.provider "aws")}}
+  clusterServiceClassExternalName: rdspostgresql 
+  clusterServicePlanExternalName: custom-cssc 
+{{- end }}
+{{- end }}

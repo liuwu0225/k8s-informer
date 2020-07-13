@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cli-deployment
+  labels:
+    app: rediscli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rediscli
+  template:
+    metadata:
+      labels:
+        app: rediscli
+    spec:
+      containers:
+        - name: rediscli
+          image: nandy/redisclient
+          ports:
+            - containerPort: 80

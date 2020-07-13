@@ -1,0 +1,59 @@
+apiVersion: x4.sap.com/v1
+kind: X4Application
+metadata:
+  labels:
+    app.kubernetes.io/managed-by: Helm
+  name: x4-app
+spec:
+  # auditlog:
+  #   from: secret
+  #   value: vcap-secret
+  components:
+    - image: big.docker.repositories.sap.ondemand.com/com.sap.x4-lock-manager-master/x4-lock-manager:1.1.7
+      name: lockmanager01
+      type: lockmanager
+    - database:
+        from: component
+        value: bafdb
+      image: big.docker.repositories.sap.ondemand.com/com.sap.x4-job-manager-master/x4-job-manager:2.0.1
+      name: jobmanager01
+      type: jobmanager
+    - name: bafdb
+      type: postgres
+      image: postgres:10
+  configuration: {}
+  database:
+    from: component
+    value: bafdb
+  env:
+    - name: VCAP_SERVICES
+      valueFrom:
+        secretKeyRef:
+          key: content.json
+          name: vcap-secret
+    - name: NODE_EXTRA_CA_CERTS
+      value: /etc/ssl/certs/ca-certificates.crt
+  gateway:
+    host: cssc-devops.xman.eu.one.cloud.sap
+    tlsSecretName: wildcard.cssc-devops.xman.eu.one.cloud.sap
+  imagePullSecrets:
+    - regcred
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  # serviceInstances:
+  #   - name: bafdb
+  #     parameters:
+  #       sslEnforcement: disabled
+  #     serviceName: azure-postgresql-10
+  #     servicePlan: general-purpose-cssc
+  supportUsers:
+    - yu.yu01@sap.com
+    - michael.leibel@sap.com
+    - christoph.barbian@sasp.com
+  uaa:
+    from: secret
+    value: vcap-secret

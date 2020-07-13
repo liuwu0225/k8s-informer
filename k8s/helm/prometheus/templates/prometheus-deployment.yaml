@@ -1,0 +1,33 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: x4prometheus-deployment
+  labels:
+    app: x4prometheus
+    purpose: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: x4prometheus
+      purpose: dev
+  template:
+    metadata:
+      labels:
+        app: x4prometheus
+        purpose: dev
+    spec:
+      containers:
+        - name: prometheus-dev
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+          ports:
+            - containerPort: 9090
+      volumes:
+        - name: config-volume
+          configMap:
+            name: x4prometheus-dev-cm

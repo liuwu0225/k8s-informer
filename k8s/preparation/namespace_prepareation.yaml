@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-workflow
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-workflow
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: x4.sap.com:argo-workflow
+subjects:
+  - kind: ServiceAccount
+    name: argo-workflow
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: x4job
+description: This priority class should be used for x4job service pods only.
+value: 1000000
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: x4jobquota
+spec:
+  hard:
+    pods: "9"
+  scopeSelector:
+    matchExpressions:
+      - operator: In
+        scopeName: PriorityClass
+        values:
+          - x4job

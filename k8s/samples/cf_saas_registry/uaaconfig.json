@@ -1,0 +1,66 @@
+{
+  "xsappname": "xman-local",
+  "tenant-mode": "dedicated",
+  "oauth2-configuration": {
+    "grant-types": [
+      "authorization_code",
+      "client_credentials",
+      "password",
+      "refresh_token",
+      "urn:ietf:params:oauth:grant-type:saml2-bearer",
+      "user_token",
+      "client_x509",
+      "urn:ietf:params:oauth:grant-type:jwt-bearer"
+    ],
+    "redirect-uris": [
+      "http://**.xman.local.127.0.0.1.nip.io/**",
+      "http://**.x4-sample-dev.xman.eu.one.cloud.sap/**",
+      "http://*.local/**",
+      "http://localhost*/**"
+    ]
+  },
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Apicall",
+      "description": "Execute API call from X4"
+    },
+    {
+      "name": "$XSAPPNAME.Callback",
+      "description": " description: With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
+    },
+    {
+      "name": "$XSAPPNAME.s4apicall",
+      "description": "S4 calling finetune API"
+    },
+    {
+      "name": "$XSAPPNAME.scimread",
+      "description": "Read on scim API"
+    },
+    {
+      "name": "$XSAPPNAME.scimwrite",
+      "description": "Write on scim API"
+    },
+    {
+      "name": "$XSAPPNAME.tmscontentimport",
+      "description": "Execute the content write API"
+    },
+    {
+      "name": "$XSAPPNAME.spcaccountcreate",
+      "description": "SPC Create Account write API"
+    },
+    {
+      "name": "$XSAPPNAME.onboarding",
+      "description": "Onboarding of User"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Onboarding",
+      "description": "Onboarding",
+      "scope-references": ["$XSAPPNAME.onboarding", "uaa.user"]
+    }
+  ]
+}

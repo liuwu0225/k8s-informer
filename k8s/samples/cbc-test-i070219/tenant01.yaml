@@ -1,0 +1,12 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Tenant
+metadata:
+  name: cbc-i070219-tenant-01
+spec:
+  tenant: tenant01
+  role: OS001
+  application: cbc-i070219
+  subdomain: x4demo1
+  configuration:
+    http://sap.com/x4/admin:
+      debugLog: ""

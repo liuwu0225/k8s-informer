@@ -1,0 +1,52 @@
+apiVersion: x4.sap.com/v1
+kind: X4Tenant
+metadata:
+  creationTimestamp: "2020-05-11T12:18:00Z"
+  finalizers:
+    - metacontroller.app/decoratorcontroller-tenant.x4.sap.com
+  generation: 1
+  name: x4-app-admincsscdevopsxmanmastereuaz
+  namespace: cssc-devops
+  ownerReferences:
+    - apiVersion: x4.sap.com/v1
+      blockOwnerDeletion: true
+      kind: X4Application
+      name: x4-app
+      uid: 52ea3c3f-9e04-4246-846c-d9d50cf2ecec
+  resourceVersion: "31063020"
+  selfLink: /apis/x4.sap.com/v1/namespaces/cssc-devops/x4tenants/x4-app-admincsscdevopsxmanmastereuaz
+  uid: 682eb918-d231-4237-b98b-e31c606402bd
+spec:
+  application: x4-app
+  configuration: {}
+  role: OS001
+  subdomain: admincsscdevopsxmanmastereuaz
+  tenant: da5e54bb-e076-455f-8bf1-71980ca39da8
+status:
+  activities:
+    - name: SchemaSetup
+      phase: Active
+      reconciledGeneration: 1
+      resources: []
+    - name: ActivateTenant
+      phase: Provisioning
+      reconciledGeneration: 1
+      resources:
+        - error:
+            name: NotFoundError
+          info:
+            message:
+              virtual service da5e54bb-e076-455f-8bf1-71980ca39da8-vs not found
+              in namespace cssc-devops
+          kind: VirtualService
+          name: da5e54bb-e076-455f-8bf1-71980ca39da8-vs
+          ready: false
+    - name: ProvisionTenant
+      phase: Active
+      reconciledGeneration: 1
+      resources: []
+  observedGeneration: 1
+  phase: Provisioning
+  reconciledGeneration: 1
+  url: https://admincsscdevopsxmanmastereuaz.cssc-devops.xman.eu.one.cloud.sap
+  version: 2.0.0-2.0.0-7

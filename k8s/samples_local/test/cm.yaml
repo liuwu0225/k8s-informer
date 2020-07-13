@@ -1,0 +1,48 @@
+apiVersion: v1
+data:
+  logoutpage: |-
+    <html>
+      <head>
+        <title>Logout</title>
+      </head>
+      <body>
+        <h1>Logout</h1>
+        <p>You are now logged out!</p>
+        <p>You may <a href="/">return to the application</a></p>
+      </body>
+    </html>
+  xsapp: |-
+    {
+      "authenticationMethod":"route",
+      "logout":{
+          "logoutEndpoint":"/sap/public/ap/ui/logoff",
+          "logoutPage":"/logout-page.html"
+      },
+      "routes":[
+          {
+            "source":"^/logout-page.html$",
+            "localDir":"static-resources",
+            "authenticationType":"none"
+          },
+          {
+            "source":"^/sap/svc/subscription/api/(.*)$",
+            "destination":"x4dest",
+            "csrfProtection":false,
+            "authenticationType":"none"
+          },
+          {
+            "source":"^/api/subscription/tenants/(.*)$",
+            "destination":"x4dest",
+            "csrfProtection":false,
+            "authenticationType":"none"
+          },
+          {
+            "source":"^(?:(?!\b/logout-page.html\b).)*$",
+            "destination":"x4dest",
+            "csrfProtection":false
+          }
+      ]
+    }
+kind: ConfigMap
+metadata:
+  name: x4-app-2-1-0-4952-ar-cm

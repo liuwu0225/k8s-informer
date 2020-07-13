@@ -1,0 +1,10 @@
+{
+	"xsappname": "x4-sample",
+	"appName": "x4-sample",
+	"displayName": "X4 Sample(rel2005)",
+	"description": "X4 Sample(rel2005)",
+	"appUrls": {
+		"getDependencies": "",
+		"onSubscription": "http://xman.x4-sample.xman.eu.one.cloud.sap/api/applications/x4-sample:x4-sample/tenants/{tenantId}"
+	}
+}

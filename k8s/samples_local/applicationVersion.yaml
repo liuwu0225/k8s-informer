@@ -1,0 +1,21 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4-sample-2.0.0
+spec:
+  application: x4-sample
+  version: 2.0.0
+  worker:
+    image: x4samples:0403
+  content:
+    image: x4samples:0403
+  env:
+    - name: TEST_ENV
+      value: test11111111111
+    - name: TEST_VALUEFROM
+      valueFrom:
+        secretKeyRef:
+          key: host
+          name: x4-sample-x4sysdb-secret
+    - name: APP_TEST_ENV
+      value: test999

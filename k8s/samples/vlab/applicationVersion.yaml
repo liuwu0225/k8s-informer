@@ -1,0 +1,11 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: sme-express-0.1.1
+spec:
+  application: sme-express
+  version: 0.1.1
+  worker:
+    image: big.docker.repositories.sap.ondemand.com/internal-x4-demo-dev:0.2.2
+  content:
+    image: big.docker.repositories.sap.ondemand.com/internal-x4-demo-dev:0.2.2

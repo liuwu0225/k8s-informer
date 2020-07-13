@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vcap-x4-bc-dev
+type: Opaque
+data:
+  content.json: ewogICJvYmplY3RzdG9yZSI6IFsKICAgIHsKICAgICAgImJpbmRpbmdfbmFtZSI6IG51bGwsCiAgICAgICJjcmVkZW50aWFscyI6IHsKICAgICAgICAiYXV0aF91cmwiOiAiaHR0cHM6Ly9pZGVudGl0eS0zLmV1LWRlLTIuY2xvdWQuc2FwOjQ0MyIsCiAgICAgICAgImNvbnRhaW5lcl9uYW1lIjogImNvbnRlbnQtbWFuYWdlbWVudCIsCiAgICAgICAgInBhc3N3b3JkIjogIjhhdUQ5bUZYelQ2azlEam4iLAogICAgICAgICJwcm9qZWN0IjogIng0LXRlc3QiLAogICAgICAgICJwcm9qZWN0X2RvbWFpbiI6ICJtb25zb29uMyIsCiAgICAgICAgInVzZXJfZG9tYWluIjogIm1vbnNvb24zIiwKICAgICAgICAidXNlcm5hbWUiOiAiVE0zX0kwMzk4MThfMDIiCiAgICAgIH0sCiAgICAgICJsYWJlbCI6ICJvYmplY3RzdG9yZSIsCiAgICAgICJwbGFuIjogInN3aWZ0LXN0YW5kYXJkIiwKICAgICAgInByb3ZpZGVyIjogIm9wZW5zdGFjayIsCiAgICAgICJ0YWdzIjogWyJvYmplY3RTdG9yZSJdCiAgICB9CiAgXSwKICAiYXVkaXRsb2ciOiBbCiAgICB7CiAgICAgICJiaW5kaW5nX25hbWUiOiBudWxsLAogICAgICAiY3JlZGVudGlhbHMiOiB7CiAgICAgICAgInBhc3N3b3JkIjogIjVmYmY1YjliYjhkNWExOWQiLAogICAgICAgICJ1cmwiOiAiaHR0cHM6Ly9hcGkuYXVkaXRsb2cuY2YuZXUxMC5oYW5hLm9uZGVtYW5kLmNvbTo4MDgxIiwKICAgICAgICAidXNlciI6ICJiZmE5ZTk3NjMwZDM3YjAyIgogICAgICB9LAogICAgICAiaW5zdGFuY2VfbmFtZSI6ICJiY2F1ZGl0bG9nIiwKICAgICAgImxhYmVsIjogImF1ZGl0bG9nIiwKICAgICAgIm5hbWUiOiAiYXVkaXRsb2ciLAogICAgICAicGxhbiI6ICJzdGFuZGFyZCIsCiAgICAgICJwcm92aWRlciI6IG51bGwsCiAgICAgICJ0YWdzIjogWyJhdWRpdGxvZyJdCiAgICB9CiAgXSwKICAidWFhIjogWwogICAgewogICAgICAibGFiZWwiOiAieHN1YWEiLAogICAgICAicHJvdmlkZXIiOiBudWxsLAogICAgICAicGxhbiI6ICJicm9rZXIiLAogICAgICAibmFtZSI6ICJ4NHVhYSIsCiAgICAgICJ0YWdzIjogWyJ4c3VhYSJdLAogICAgICAiaW5zdGFuY2VfbmFtZSI6ICJ4NHVhYSIsCiAgICAgICJiaW5kaW5nX25hbWUiOiBudWxsLAogICAgICAiY3JlZGVudGlhbHMiOiB7CiAgICAgICAgImFwaXVybCI6ICJodHRwczovL2FwaS5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tIiwKICAgICAgICAiY2xpZW50aWQiOiAic2IteDQtYmMtZGV2LXhtYW4taW50IWI0Mjc5NSIsCiAgICAgICAgImNsaWVudHNlY3JldCI6ICJNQUVoTnZrMTVhUWQ3S21rUmFEREVORDExaW89IiwKICAgICAgICAiaWRlbnRpdHl6b25lIjogInhtYW4tZGV2IiwKICAgICAgICAiaWRlbnRpdHl6b25laWQiOiAiZjgxNWUwYTMtMmFmNi00MDRkLWI0MmItZTEwZDUxYzQ5MTc0IiwKICAgICAgICAic2J1cmwiOiAiaHR0cHM6Ly9pbnRlcm5hbC14c3VhYS5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tIiwKICAgICAgICAidGVuYW50aWQiOiAiZjgxNWUwYTMtMmFmNi00MDRkLWI0MmItZTEwZDUxYzQ5MTc0IiwKICAgICAgICAidGVuYW50bW9kZSI6ICJzaGFyZWQiLAogICAgICAgICJ0cnVzdGVkY2xpZW50aWRzdWZmaXgiOiAifHg0LWJjLWRldi14bWFuLWludCFiNDI3OTUiLAogICAgICAgICJ1YWFkb21haW4iOiAiYXV0aGVudGljYXRpb24uZXUxMC5oYW5hLm9uZGVtYW5kLmNvbSIsCiAgICAgICAgInVybCI6ICJodHRwczovL3htYW4tZGV2LmF1dGhlbnRpY2F0aW9uLmV1MTAuaGFuYS5vbmRlbWFuZC5jb20iLAogICAgICAgICJ2ZXJpZmljYXRpb25rZXkiOiAiLS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS1NSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDQVFFQXRKNWxNdFJBVm1TMndOdUlBQURxZ2swZ3c3UHdNOFMzTksrM29OdjJnWXkyQzArbWR0ZGJwM292d2tDZHoyNENxbTlaVjQzKzBaMnc2UlN1S0EzZnJyam4vUHZacXg4TVBSRE5oZDFiVnFyTXErUXFETFM0RXJCK3VQdm9SWmk2MTBieGs4SEZkTFdNSjhvbjFNaVdYRzFzWlVvdTBwQUFzak0yby9KcVFWTWFHQjBOTVBsWm43YVB0Sjh0bWVNbGtaNm8vV2xNQnB3dVJ3WERlNjh3VVovQUMvZHJBTmdIRnVGQzh5alRaSU1Sb1QrSGdndGJyeUpFbFRETjFML3dmRlE3d050WkxIejJPUDQyUkVVK3lEMTcwZzNHYW9UbWQ3YUtvbmIwVU04ei9yanB0NDAwdzNpZDYrWVVLaHIyUjE1d0U0OXIyQm01UmNNVW5HV1A3UUlEQVFBQi0tLS0tRU5EIFBVQkxJQyBLRVktLS0tLSIsCiAgICAgICAgInhzYXBwbmFtZSI6ICJ4NC1iYy1kZXYteG1hbi1pbnQhYjQyNzk1IgogICAgICB9LAogICAgICAic3lzbG9nX2RyYWluX3VybCI6IG51bGwsCiAgICAgICJ2b2x1bWVfbW91bnRzIjogW10KICAgIH0KICBdCn0KCg==
+---
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: cbc-xman-int
+spec:
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  database:
+    from: component
+    value: bafdb
+  uaa:
+    from: secret
+    value: vcap-x4-bc-dev
+  components:
+    - name: bafdb
+      type: postgres
+      image: postgres:10
+    - name: lockmanager01
+      type: lockmanager
+      image: docker.wdf.sap.corp:51116/com.sap.x4/x4-lock-manager:1.1.7
+    - name: jobmanager01
+      type: jobmanager
+      image: docker.wdf.sap.corp:51116/com.sap.x4-job-manager-master/x4-job-manager:2.0.0
+      database:
+        from: component
+        value: bafdb
+  gateway:
+    host: cbc-xman-int.cbc.c.eu-nl-1.cloud.sap
+  supportUsers:
+    - yu.yu01@sap.com
+  imagePullSecrets:
+    - regcred
+  env:
+    - name: "VCAP_SERVICES"
+      valueFrom:
+        secretKeyRef:
+          name: vcap-x4-bc-dev
+          key: content.json
+    - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+      value: "true"
+  configuration: {}

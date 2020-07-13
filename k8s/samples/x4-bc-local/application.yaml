@@ -1,0 +1,47 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-bc-local
+  namespace: x4-bc-local
+spec:
+  # baf application artifacts
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  # saasregistry:
+  #   serviceInstance: saasregservice
+  database:
+    from: component
+    value: bafdb
+  uaa:
+    from: secret
+    value: x4-bc-dev-vcap
+  components:
+    - name: bafdb
+      type: postgres
+      image: docker.wdf.sap.corp:50000/com.sap.x4/xman-db:0.0.1
+    - name: lockmanager01
+      type: lockmanager
+      image: docker.wdf.sap.corp:50000/com.sap.x4-lock-manager-master/x4-lock-manager:1.1.7
+    - name: jobmanager01
+      type: jobmanager
+      image: jobman:local
+      database:
+        from: component
+        value: bafdb
+  gateway:
+    host: x4-bc.xman.local.127.0.0.1.nip.io
+  supportUsers:
+    - yu.yu01@sap.com
+  imagePullSecrets:
+    - regcred
+  env:
+    - name: "VCAP_SERVICES"
+      valueFrom:
+        secretKeyRef:
+          name: x4demo-vcap-secret
+          key: content.json
+  configuration: {}

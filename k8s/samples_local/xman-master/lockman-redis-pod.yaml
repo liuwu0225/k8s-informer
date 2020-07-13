@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: x4-bc-lockmanager-lockmanager04
+    x4.sap.com/managed-by: xman
+  name: x4-bc-lockmanager-lockmanager04
+  namespace: i342835
+spec:
+  imagePullSecrets:
+    - name: regcred
+  containers:
+    - env:
+        - name: REDIS_SVC
+          valueFrom:
+            secretKeyRef:
+              key: host
+              name: x4-bc-redis-cred
+        - name: REDIS_SVC_PORT
+          valueFrom:
+            secretKeyRef:
+              key: port
+              name: x4-bc-redis-cred
+        - name: REDIS_SVC_PWD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: x4-bc-redis-cred
+      image: big.docker.repositories.sap.ondemand.com/internal-x4-lock-manager-redis-test:0.1.2
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: http-lock-port
+          scheme: HTTP
+        initialDelaySeconds: 50
+        periodSeconds: 12
+        successThreshold: 1
+        timeoutSeconds: 2
+      name: x4-lock-man
+      ports:
+        - containerPort: 3223
+          name: http-lock-port
+          protocol: TCP
+      readinessProbe:
+        failureThreshold: 5
+        httpGet:
+          path: /
+          port: http-lock-port
+          scheme: HTTP
+        initialDelaySeconds: 25
+        periodSeconds: 12
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources: {}

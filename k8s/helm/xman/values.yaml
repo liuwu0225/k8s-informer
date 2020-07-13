@@ -1,0 +1,34 @@
+replicaCount: 1
+ide:
+  enabled: false
+  image: docker.wdf.sap.corp:50000/com.sap.x4/internal-x4-theia:0.0.3
+serviceCatalog:
+  provider: azure # azure/aws
+  #accessCidr: # 0.0.0.0/0 # mandatory value for AWS serviceCatalog
+  enabled: true
+istio:
+  host:
+image:
+  repository: docker.wdf.sap.corp:50000/com.sap.x4/xman
+  tag: 0.0.43
+xman_app:
+  operatorUrl: http://xman-app-svc.xman-system.svc.cluster.local
+  jobServiceUrl: http://x4-job-svc.x4-job-system.svc.cluster.local
+  promServiceUrl: http://prometheus.istio-system.svc.cluster.local:9090
+  serverTimeoutSeconds: 600
+  debug: false
+xman_pg:
+  image:
+    repository: postgres
+    tag: 10
+  database: postgres
+  host: xman-pg-service
+  hostExt: xman-pg-service.xman-system.svc
+  port: 5432
+  schema: xman
+  db_user: postgres
+  db_password: postgres
+x4_pg:
+  volumeSize: 10Gi
+  storageClassName:
+environment: production

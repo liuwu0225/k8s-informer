@@ -1,0 +1,12 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Tenant
+metadata:
+  name: x4-bc-xman-tenant-03
+spec:
+  tenant: tenant03
+  role: OS001
+  application: x4-bc-xman
+  subdomain: test-03
+  configuration:
+    http://sap.com/x4/admin:
+      debugLog: ""

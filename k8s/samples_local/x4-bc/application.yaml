@@ -1,0 +1,21 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-bc
+spec:
+  host: x4-bc.local
+  dbtype: POSTGRES
+  lock-manager:
+    image: docker.wdf.sap.corp:50000/com.sap.x4/x4-lock-manager:1.1.5
+  job-manager:
+    image: docker.wdf.sap.corp:50000/com.sap.x4/x4-job-manager:1.1.0
+  support-users: SAP_SUPP001,SAP_SUPP002,SAP_SUPP003
+  serviceCatalog:
+    enabled: false
+  configuration:
+    http://sap.com/x4/admin:
+      debugLog: ""
+    http://sap.com/x4/idm:
+      MaintenanceWindow:
+        startDateTime: 2020-02-19T00:00:00Z
+        endDateTime: 2020-02-20T01:00:00Z

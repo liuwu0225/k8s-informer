@@ -1,0 +1,20 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: lock-man-svc
+  labels:
+    app.kubernetes.io/name: x4-lock-man
+    app.kubernetes.io/instance: x4-lock-man
+    app.kubernetes.io/managed-by: xman
+    app: x4-lock-man
+spec:
+  ports:
+    - name: http-lock-man-svc-port
+      protocol: TCP
+      port: 3223
+      targetPort: http-lock-port
+  selector:
+    app: x4-lock-man
+  type: ClusterIP
+  sessionAffinity: None

@@ -1,0 +1,16 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Tenant
+metadata:
+  name: x4-app-first-tenant
+spec:
+  tenant: tenant01
+  role: OS001
+  application: x4-app
+  subdomain: first-tenant
+  configuration:
+    http://sap.com/x4/admin:
+      debugLog: ""
+    http://sap.com/x4/idm:
+      MaintenanceWindow:
+        startDateTime: 2020-02-19T00:00:00Z
+        endDateTime: 2020-02-20T01:00:00Z

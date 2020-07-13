@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: x4-app-svc
+spec:
+  host: x4-app-svc
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpCookie:
+          name: istio-session
+          ttl: 1800s

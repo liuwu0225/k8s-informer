@@ -1,0 +1,13 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4-bc-local-1.0.0
+  namespace: x4-bc-local
+spec:
+  application: x4-bc-local
+  version: 1.0.0
+  worker:
+    image: docker.wdf.sap.corp:51116/com.sap.x4-bc-dev/x4-bc:2.0.0-20200426212704_4f439387710530c74fdce0766c903592ed7a3e0e
+    replicas: 2
+  content:
+    image: docker.wdf.sap.corp:51116/com.sap.x4-bc-dev/x4-bc:2.0.0-20200426212704_4f439387710530c74fdce0766c903592ed7a3e0e

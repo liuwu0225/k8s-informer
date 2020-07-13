@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: x4-demo-vsvc
+spec:
+  hosts:
+    - "*.x4-demo.istio.x4.c.eu-de-1.cloud.sap"
+  gateways:
+    - x4-demo-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: x4-demo-0-0-4-service
+            port:
+              number: 80

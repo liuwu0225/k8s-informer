@@ -1,0 +1,13 @@
+apiVersion: x4.sap.com/v1
+kind: X4ApplicationVersion
+metadata:
+  name: x4-app-2.0.0-2.0.0-11
+spec:
+  application: x4-app
+  approuter:
+    image: build-milestones.docker.repositories.sap.ondemand.com/com.sap.html5.apps/approuter-6.7:6.7.0
+  content:
+    image: big.docker.repositories.sap.ondemand.com/com.sap.x4-bc-release/x4-bc:2.0.0-20200515155912_ef6cda9ea4bf7bc43fa094867b26379774dc4f03
+  version: 2.0.0-2.0.0-11
+  worker:
+    image: big.docker.repositories.sap.ondemand.com/com.sap.x4-bc-release/x4-bc:2.0.0-20200515155912_ef6cda9ea4bf7bc43fa094867b26379774dc4f03

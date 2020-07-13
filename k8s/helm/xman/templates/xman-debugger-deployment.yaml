@@ -1,0 +1,166 @@
+{{- if .Values.ide.enabled }}
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: xman-deployment
+  labels:
+    app.kubernetes.io/name: xman-app
+    app.kubernetes.io/instance: xman-app
+    app.kubernetes.io/managed-by: xman
+    app: xman-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: xman-app
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: xman-app
+        app.kubernetes.io/instance: xman-app
+        app.kubernetes.io/managed-by: xman
+        app: xman-app
+    spec:
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      initContainers:
+      - command:
+        - "sh"
+        - "-c"
+        - "cp -R ./* /tmp/"
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}" 
+        imagePullPolicy: IfNotPresent
+        name: code-container
+        volumeMounts:
+          - name: shared-data
+            mountPath: /tmp
+      containers:
+      - name: xman-app
+        image: "{{ .Values.ide.image }}" 
+        command:
+        - "sh"
+        - "-c"
+        - "sudo chown -R theia:theia /home/project ; yarn theia start /home/project --hostname=0.0.0.0 --port=5000"
+        volumeMounts:
+          - name: shared-data
+            mountPath: /home/project
+        ports:
+        - name: http-xman-port
+          containerPort: 3000
+          protocol: TCP
+        - name: https-xman-port
+          containerPort: 3002
+          protocol: TCP
+        - name: http-ide-port
+          containerPort: 5000
+          protocol: TCP  
+        {{- if .Values.xman_app }}
+          {{- if .Values.xman_app.debug }}
+        - name: tcp-xman-debug-port
+          containerPort: 5335
+          protocol: TCP
+          {{- end }}
+        {{- end }}
+        envFrom:
+        - configMapRef:
+            name: xman-app-config
+        env:
+          - name: CERT_PEM
+            valueFrom:
+              secretKeyRef:
+                name: perf-sidecar-injector-webhook-certs
+                key: cert.pem
+          - name: KEY_PEM
+            valueFrom:
+              secretKeyRef:
+                name: perf-sidecar-injector-webhook-certs
+                key: key.pem 
+          - name: K8S_MODE
+            value: "cluster"
+          - name: PORT
+            value: "3000" 
+        {{- if (or (eq .Values.serviceCatalog.provider "azure") (not .Values.serviceCatalog.enabled)) }}
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: host
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: port                   
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: database                     
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: password 
+          - name: DB_SSL_REQUIRED
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: sslRequired             
+        {{- else if (eq .Values.serviceCatalog.provider "aws") }} 
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: ENDPOINT_ADDRESS
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: PORT                   
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: DB_NAME                     
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: MASTER_USERNAME
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: xman-pg-secret
+                key: MASTER_PASSWORD
+          - name: DB_SSL_REQUIRED
+            value: "true"
+        {{- end }}
+        resources: {}
+        terminationMessagePath: "/dev/termination-log"
+        terminationMessagePolicy: File
+        imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      {{- if (.Values.secret) and (.Values.secret.dockerconfigjson) }}
+      imagePullSecrets:
+        - name: regcred
+      {{- end }}
+      serviceAccount: xman-operator
+      serviceAccountName: xman-operator
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+  {{- end }}

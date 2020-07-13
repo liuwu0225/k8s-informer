@@ -1,0 +1,10 @@
+apiVersion: x4.sap.com/v1
+kind: X4Tenant
+metadata:
+  name: x4demo-9da13aa8-c930-4373-a9a5-547d771e4b92
+spec:
+  tenant: 9da13aa8-c930-4373-a9a5-547d771e4b92
+  role: OS001
+  application: x4demo
+  subdomain: first-tenant
+  configuration: {}

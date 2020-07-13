@@ -1,0 +1,21 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: sme-express
+spec:
+  host: sme-express.cbc.c.eu-nl-1.cloud.sap
+  dbtype: POSTGRES
+  lock-manager:
+    image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-lock-manager-dev:1.2.0-20200210073435_6ed1d3ac858c46a4ead8583366c5a47061088787
+  job-manager:
+    image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-job-manager:1.0.0-20200220084919_21d77c99126a51138e8d87e7dfc3ddd40edfb48c
+  secrets:
+    imagePull: regcred
+  configuration:
+    http://sap.com/x4-core:
+      enableJSONFormat: true
+      loglevel: info
+    http://sap.com/x4/idm:
+      MaintenanceWindow:
+        startDateTime: 2019-12-19T00:00:00Z
+        endDateTime: 2019-12-19T01:00:00Z

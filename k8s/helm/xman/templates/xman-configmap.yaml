@@ -1,0 +1,25 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: xman-app-config
+data:
+  DB_TYPE: postgres
+  DB_SERVICE_CATALOG_ENABLED: "{{ .Values.serviceCatalog.enabled }}"
+  DB_HOST_EXT: "{{ .Values.xman_pg.hostExt }}"
+  DB_SCHEMA: "{{ .Values.xman_pg.schema }}"
+  JOB_SVC_URL: "{{ .Values.xman_app.jobServiceUrl }}"
+  PROM_SVC_URL: "{{ .Values.xman_app.promServiceUrl}}"
+  XMAN_DEBUG_MODE: "{{ if .Values.xman_app.debug }}true{{ else }}false{{ end }}"
+  XMAN_SERVER_TIMEOUT: "{{ mul .Values.xman_app.serverTimeoutSeconds 1000 }}"
+  OPERATOR_URL: "{{ .Values.xman_app.operatorUrl }}"
+  UPDATE_IMAGE: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+  POSTGRES_IMAGE: "{{ .Values.xman_pg.image.repository }}:{{ .Values.xman_pg.image.tag }}"
+  IDE_IMAGE: "{{ .Values.ide.image }}"
+  ENVIRONMENT: "{{ .Values.environment }}"
+  SERVICE_CATALOG_AWS_POSTGRES_PATTERN: "rds"
+  SERVICE_CATALOG_AZURE_POSTGRES_PATTERN: "azure"
+  SERVICE_CATALOG_AWS_REDIS_PATTERN: "elasticacheredis"
+  SERVICE_CATALOG_AZURE_REDIS_PATTERN: "azure"
+  STATEFULSET_PG_VOLUME_SIZE: "{{ .Values.x4_pg.volumeSize }}"
+  STATEFULSET_PG_STORAGE_CLASS_NAME: "{{ .Values.x4_pg.storageClassName }}"

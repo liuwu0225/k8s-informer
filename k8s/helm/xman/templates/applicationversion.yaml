@@ -1,0 +1,128 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: x4appvers.x4.sap.com
+  labels:
+    "x4.sap.com/managed-by": "xman"
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: x4.sap.com
+  # list of versions supported by this CustomResourceDefinition
+  versions:
+    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      served: true
+      # One and only one version must be marked as the storage version.
+      storage: true
+  # either Namespaced or Cluster
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: x4appvers
+    # singular name to be used as an alias on the CLI and for display
+    singular: x4appver
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: X4ApplicationVersion
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+      - xv
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          required:
+            - application
+            - version
+            - worker
+            - content
+          properties:
+            application:
+              type: string
+            version:
+              type: string
+              pattern: "^[A-Za-z0-9][-A-Za-z0-9_.]*[A-Za-z0-9]$"
+            worker:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                replicas:
+                  type: integer
+                resources:
+                  type: object
+                  properties:
+                    requests:
+                      type: object
+                      properties:
+                        memory:
+                          type: string
+                        cpu:
+                          type: string
+                    limits:
+                      type: object
+                      properties:
+                        memory:
+                          type: string
+                        cpu:
+                          type: string
+            content:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+            supportTickets:
+              type: array   
+              items:
+                format: string
+                type: string
+            approuter:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                logoutPage:
+                  type: string
+                enableSupportIDP:
+                  type: boolean
+                bypassed:
+                  type: array
+                  items:
+                    properties:
+                      uri:
+                        type: object
+                        properties:
+                          prefix:
+                            type: string
+            env:
+              type: array   
+              items:
+                format: string
+                type: object
+  subresources:
+    # status enables the status subresource.
+    status:
+      phase: initial
+  additionalPrinterColumns:
+    - name: application
+      type: string
+      description: The application name
+      JSONPath: .spec.application
+    - name: version
+      type: string
+      description: The version
+      JSONPath: .spec.version
+    - name: status
+      type: string
+      description: The status
+      JSONPath: .status.phase
+    - name: tag
+      type: string
+      description: The tag
+      JSONPath: .status.tag

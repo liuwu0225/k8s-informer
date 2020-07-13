@@ -1,0 +1,82 @@
+{{- $tlsCrt := "" }}
+{{- $tlsKey := "" }}
+{{- $caCrt := "" }}
+{{- $ca := genCA "svc-cat-ca" 3650 }}
+{{- $svcName := "xman-app-svc"}}
+{{- $namespce := "xman-system" }}
+{{- $cn := printf "%s.%s.svc" $svcName $namespce }}
+{{- $altName := printf "%s" $cn }}
+{{- $server := genSignedCert $cn nil (list $altName) 3650 $ca }}
+# openssl x509 -in mycert.crt -out mycert.pem -outform PE
+{{- $tlsCrt = b64enc $server.Cert }}
+{{- $tlsKey = b64enc $server.Key }}
+{{- $caCrt =  b64enc $ca.Cert }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: perf-sidecar-injector-webhook-certs
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+type: Opaque
+data:
+  cert.pem: {{ $tlsCrt }}
+  key.pem: {{ $tlsKey }}
+  ca.crt:  {{ $caCrt }}
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: sidecar-injector-webhook-cfg
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+  labels:
+    app: sidecar-injector
+webhooks:
+  - name: sidecar-injector.morven.xa
+    admissionReviewVersions: ["v1beta1"]
+    clientConfig:
+      service:
+        name: xman-app-svc
+        namespace: xman-system
+        path: /api/admission-control/mutatingwebhook/application
+      caBundle: {{ $caCrt }}
+    rules:
+      - operations: ["UPDATE","CREATE"]
+        apiGroups: ["x4.sap.com"]
+        resources: ["x4apps"]
+        apiVersions: ["v1"]
+        scope: "Namespaced"
+    failurePolicy: Ignore
+    sideEffects: None
+  - name: sidecar-injector.morven.xv
+    admissionReviewVersions: ["v1beta1"]
+    clientConfig:
+      service:
+        name: xman-app-svc
+        namespace: xman-system
+        path: /api/admission-control/mutatingwebhook/applicationversion
+      caBundle: {{ $caCrt }}
+    rules:
+      - operations: ["CREATE", "UPDATE", "DELETE"]
+        apiGroups: ["x4.sap.com"]
+        resources: ["x4appvers"]
+        apiVersions: ["v1"]
+        scope: "Namespaced"
+    failurePolicy: Ignore
+    sideEffects: None
+  - name: sidecar-injector.morven.xt
+    admissionReviewVersions: ["v1beta1"]
+    clientConfig:
+      service:
+        name: xman-app-svc
+        namespace: xman-system
+        path: /api/admission-control/mutatingwebhook/tenant
+      caBundle: {{ $caCrt }}
+    rules:
+      - operations: ["UPDATE"]
+        apiGroups: ["x4.sap.com"]
+        resources: ["x4tenants"]
+        apiVersions: ["v1"]
+        scope: "Namespaced"
+    failurePolicy: Ignore
+    sideEffects: None

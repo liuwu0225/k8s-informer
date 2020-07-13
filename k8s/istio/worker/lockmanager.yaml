@@ -1,0 +1,74 @@
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: x4-lock-man-deployment
+  labels:
+    app.kubernetes.io/name: x4-lock-man
+    app.kubernetes.io/instance: x4-lock-man
+    app.kubernetes.io/managed-by: xman
+    app: x4-lock-man
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: x4-lock-man
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: x4-lock-man
+        app.kubernetes.io/instance: x4-lock-man
+        app.kubernetes.io/managed-by: xman
+        app: x4-lock-man
+    spec:
+      containers:
+        - name: x4-lock-man
+          image: docker.wdf.sap.corp:50000/com.sap.x4/x4-lock-man:1.0.5
+          ports:
+            - name: http-lock-port
+              containerPort: 3223
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http-lock-port
+            initialDelaySeconds: 50
+            failureThreshold: 3
+            timeoutSeconds: 2
+            periodSeconds: 12
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http-lock-port
+            initialDelaySeconds: 25
+            timeoutSeconds: 5
+            failureThreshold: 5
+            periodSeconds: 12
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: worker.gardener.cloud/pool
+                    operator: In
+                    values:
+                      - x4-demo
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      imagePullSecrets:
+        - name: regcred
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

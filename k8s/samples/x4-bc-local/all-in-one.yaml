@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: x4-bc-local
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argo-workflow
+  namespace: x4-bc-local
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argo-workflow
+  namespace: x4-bc-local
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: x4.sap.com:argo-workflow
+subjects:
+  - kind: ServiceAccount
+    name: argo-workflow
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: x4jobquota
+  namespace: x4-bc-local
+spec:
+  hard:
+    pods: "3"
+  scopeSelector:
+    matchExpressions:
+      - operator: In
+        scopeName: PriorityClass
+        values:
+          - x4job
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: x4-bc-dev-vcap
+  namespace: x4-bc-local
+type: Opaque
+data:
+  content.json: ewogICJvYmplY3RzdG9yZSI6IFsKICAgIHsKICAgICAgImJpbmRpbmdfbmFtZSI6IG51bGwsCiAgICAgICJjcmVkZW50aWFscyI6IHsKICAgICAgICAiYXV0aF91cmwiOiAiaHR0cHM6Ly9pZGVudGl0eS0zLmV1LWRlLTIuY2xvdWQuc2FwOjQ0MyIsCiAgICAgICAgImNvbnRhaW5lcl9uYW1lIjogImNvbnRlbnQtbWFuYWdlbWVudCIsCiAgICAgICAgInBhc3N3b3JkIjogIjhhdUQ5bUZYelQ2azlEam4iLAogICAgICAgICJwcm9qZWN0IjogIng0LXRlc3QiLAogICAgICAgICJwcm9qZWN0X2RvbWFpbiI6ICJtb25zb29uMyIsCiAgICAgICAgInVzZXJfZG9tYWluIjogIm1vbnNvb24zIiwKICAgICAgICAidXNlcm5hbWUiOiAiVE0zX0kwMzk4MThfMDIiCiAgICAgIH0sCiAgICAgICJsYWJlbCI6ICJvYmplY3RzdG9yZSIsCiAgICAgICJwbGFuIjogInN3aWZ0LXN0YW5kYXJkIiwKICAgICAgInByb3ZpZGVyIjogIm9wZW5zdGFjayIsCiAgICAgICJ0YWdzIjogWyJvYmplY3RTdG9yZSJdCiAgICB9CiAgXSwKICAiYXVkaXRsb2ciOiBbCiAgICB7CiAgICAgICJiaW5kaW5nX25hbWUiOiBudWxsLAogICAgICAiY3JlZGVudGlhbHMiOiB7CiAgICAgICAgInBhc3N3b3JkIjogIjVmYmY1YjliYjhkNWExOWQiLAogICAgICAgICJ1cmwiOiAiaHR0cHM6Ly9hcGkuYXVkaXRsb2cuY2YuZXUxMC5oYW5hLm9uZGVtYW5kLmNvbTo4MDgxIiwKICAgICAgICAidXNlciI6ICJiZmE5ZTk3NjMwZDM3YjAyIgogICAgICB9LAogICAgICAiaW5zdGFuY2VfbmFtZSI6ICJiY2F1ZGl0bG9nIiwKICAgICAgImxhYmVsIjogImF1ZGl0bG9nIiwKICAgICAgIm5hbWUiOiAiYXVkaXRsb2ciLAogICAgICAicGxhbiI6ICJzdGFuZGFyZCIsCiAgICAgICJwcm92aWRlciI6IG51bGwsCiAgICAgICJ0YWdzIjogWyJhdWRpdGxvZyJdCiAgICB9CiAgXSwKICAidWFhIjogWwogICAgewogICAgICAibGFiZWwiOiAieHN1YWEiLAogICAgICAicHJvdmlkZXIiOiBudWxsLAogICAgICAicGxhbiI6ICJicm9rZXIiLAogICAgICAibmFtZSI6ICJ4NHVhYSIsCiAgICAgICJ0YWdzIjogWyJ4c3VhYSJdLAogICAgICAiaW5zdGFuY2VfbmFtZSI6ICJ4NHVhYSIsCiAgICAgICJiaW5kaW5nX25hbWUiOiBudWxsLAogICAgICAiY3JlZGVudGlhbHMiOiB7CiAgICAgICAgImFwaXVybCI6ICJodHRwczovL2FwaS5hdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tIiwKICAgICAgICAiY2xpZW50aWQiOiAic2IteG1hbi1sb2NhbCFiNDI3OTUiLAogICAgICAgICJjbGllbnRzZWNyZXQiOiAiTUhOUjlTeGt5NGh5ZDMzQTVGRXdkdTJCNXZrPSIsCiAgICAgICAgImlkZW50aXR5em9uZSI6ICJ4bWFuLWRldiIsCiAgICAgICAgImlkZW50aXR5em9uZWlkIjogImY4MTVlMGEzLTJhZjYtNDA0ZC1iNDJiLWUxMGQ1MWM0OTE3NCIsCiAgICAgICAgInNidXJsIjogImh0dHBzOi8vaW50ZXJuYWwteHN1YWEuYXV0aGVudGljYXRpb24uZXUxMC5oYW5hLm9uZGVtYW5kLmNvbSIsCiAgICAgICAgInRlbmFudGlkIjogImY4MTVlMGEzLTJhZjYtNDA0ZC1iNDJiLWUxMGQ1MWM0OTE3NCIsCiAgICAgICAgInRlbmFudG1vZGUiOiAiZGVkaWNhdGVkIiwKICAgICAgICAidHJ1c3RlZGNsaWVudGlkc3VmZml4IjogInx4bWFuLWxvY2FsIWI0Mjc5NSIsCiAgICAgICAgInVhYWRvbWFpbiI6ICJhdXRoZW50aWNhdGlvbi5ldTEwLmhhbmEub25kZW1hbmQuY29tIiwKICAgICAgICAidXJsIjogImh0dHBzOi8veG1hbi1kZXYuYXV0aGVudGljYXRpb24uZXUxMC5oYW5hLm9uZGVtYW5kLmNvbSIsCiAgICAgICAgInZlcmlmaWNhdGlvbmtleSI6ICItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLU1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdEo1bE10UkFWbVMyd051SUFBRHFnazBndzdQd004UzNOSyszb052MmdZeTJDMCttZHRkYnAzb3Z3a0NkejI0Q3FtOVpWNDMrMFoydzZSU3VLQTNmcnJqbi9QdlpxeDhNUFJETmhkMWJWcXJNcStRcURMUzRFckIrdVB2b1JaaTYxMGJ4azhIRmRMV01KOG9uMU1pV1hHMXNaVW91MHBBQXNqTTJvL0pxUVZNYUdCME5NUGxabjdhUHRKOHRtZU1sa1o2by9XbE1CcHd1UndYRGU2OHdVWi9BQy9kckFOZ0hGdUZDOHlqVFpJTVJvVCtIZ2d0YnJ5SkVsVEROMUwvd2ZGUTd3TnRaTEh6Mk9QNDJSRVUreUQxNzBnM0dhb1RtZDdhS29uYjBVTTh6L3JqcHQ0MDB3M2lkNitZVUtocjJSMTV3RTQ5cjJCbTVSY01VbkdXUDdRSURBUUFCLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tIiwKICAgICAgICAieHNhcHBuYW1lIjogInhtYW4tbG9jYWwhYjQyNzk1IgogICAgICB9LAogICAgICAic3lzbG9nX2RyYWluX3VybCI6IG51bGwsCiAgICAgICJ2b2x1bWVfbW91bnRzIjogW10KICAgIH0KICBdCn0KCg==
+---
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-bc-local
+  namespace: x4-bc-local
+spec:
+  # baf application artifacts
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  # saasregistry:
+  #   serviceInstance: saasregservice
+  database:
+    from: component
+    value: bafdb
+  uaa:
+    from: secret
+    value: x4-bc-dev-vcap
+  # auditlog:
+  #   from: secret
+  #   value: auditlogservice
+  # destination:
+  #   serviceInstance: destinationservice
+  # transportation:
+  #   serviceInstance: transportationservice
+  # certificateservice:
+  #   serviceInstance: certificateservice
+  # ...
+  # baf appliction components
+  components:
+    - name: bafdb
+      type: postgres
+      image: postgres:10
+    - name: lockmanager01
+      type: lockmanager
+      image: docker.wdf.sap.corp:50000/com.sap.x4-lock-manager-master/x4-lock-manager:1.1.7
+    - name: jobmanager01
+      type: jobmanager
+      image: docker.wdf.sap.corp:51116/com.sap.x4-job-manager-master/x4-job-manager:2.0.0
+      # image: big.docker.repositories.sap.ondemand.com/com.sap.x4-job-manager-master/x4-job-manager:1.2.0
+      database:
+        from: component
+        value: bafdb
+  gateway:
+    host: x4-bc.xman.local.127.0.0.1.nip.io
+  supportUsers:
+    - yu.yu01@sap.com
+  imagePullSecrets:
+    - regcred
+  env:
+    - name: "VCAP_SERVICES"
+      valueFrom:
+        secretKeyRef:
+          name: x4-bc-dev-vcap
+          key: content.json
+    - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+      value: "true"
+  configuration: {}
+---
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4-bc-local-1.0.0
+  namespace: x4-bc-local
+spec:
+  application: x4-bc-local
+  version: 1.0.0
+  worker:
+    image: docker.wdf.sap.corp:51116/com.sap.x4-bc-dev/x4-bc:2.0.0-20200426212704_4f439387710530c74fdce0766c903592ed7a3e0e
+  content:
+    image: docker.wdf.sap.corp:51116/com.sap.x4-bc-dev/x4-bc:2.0.0-20200426212704_4f439387710530c74fdce0766c903592ed7a3e0e
+  # env:
+  #   - name: "VCAP_SERVICES"
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: x4demo-vcap-secret
+  #         key: content.json
+  #   - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+  #     value: "true"
+  # supportTickets:
+  #   - debug01
+  # approuter:
+  #   image: docker.wdf.sap.corp:50000/com.sap.html5.apps/approuter-6.7:6.7.0
+---
+apiVersion: x4.sap.com/v1
+kind: X4Tenant
+metadata:
+  name: cbc-test-tenant-01
+  namespace: x4-bc-local
+spec:
+  tenant: cbc-test-tenant-01
+  role: OS001
+  application: x4-bc-local
+  subdomain: cbc-test-01
+  configuration: {}

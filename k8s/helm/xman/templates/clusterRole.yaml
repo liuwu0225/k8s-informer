@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: x4apps-admin
+rules:
+  - apiGroups: ["x4.sap.com"]
+    resources: ["x4apps"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete", "exec"]
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: x4appvers-admin
+rules:
+  - apiGroups: ["x4.sap.com"]
+    resources: ["x4appvers"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete", "exec"]
+--- 
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: x4tenants-admin
+rules:
+  - apiGroups: ["x4.sap.com"]
+    resources: ["x4tenants"]
+    verbs: ["get", "watch", "list", "create", "update", "patch", "delete", "exec"]

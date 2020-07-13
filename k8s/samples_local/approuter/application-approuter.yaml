@@ -1,0 +1,22 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: sme-express
+spec:
+  host: sme-express.istio.x4.c.eu-de-1.cloud.sap
+  dbtype: POSTGRES
+  lock-manager:
+    image: docker.wdf.sap.corp:50000/com.sap.x4/x4-lock-man:1.0.5
+  job-manager:
+    image: docker.wdf.sap.corp:50000/com.sap.x4/x4-job-manager-snapshot:latest
+  approuter:
+    image: approuter:v1
+  secrets:
+    vcap: x4-vcap-services-secret
+  configuration:
+    http://sap.com/x4/admin:
+      debugLog: ""
+    http://sap.com/x4/idm:
+      MaintenanceWindow:
+        startDateTime: 2020-12-19T00:00:00Z
+        endDateTime: 2020-12-20T01:00:00Z

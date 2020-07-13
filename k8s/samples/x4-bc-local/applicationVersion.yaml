@@ -1,0 +1,8 @@
+helm upgrade x4-job-deployment k8s/helm/x4-job --install --namespace x4-job-system --values Internal_values.yaml --set image.repository=docker.wdf.sap.corp:51116/com.sap.x4-job-service-master/x4-job-service,image.tag=2.0.0
+helm upgrade xman-deployment k8s/helm/xman --install --namespace xman-system --values Internal_values.yaml --set 'image.repository=big.docker.repositories.sap.ondemand.com/com.sap.x4-xman-master/x4-xman,image.tag=2.0.0,secret.dockerconfigjson=eyJhdXRocyI6eyJiaWcuZG9ja2VyLnJlcG9zaXRvcmllcy5zYXAub25kZW1hbmQuY29tIjp7InVzZXJuYW1lIjoieDQtY2ljZC11c2VyIiwicGFzc3dvcmQiOiJTejdpVnpZZUVHQnYiLCJhdXRoIjoiZURRdFkybGpaQzExYzJWeU9sTjZOMmxXZWxsbFJVZENkZz09In19fQ=='
+
+
+helm upgrade x4-job-deployment k8s/helm/x4-job --install --namespace x4-job-system --values Acceptance_values.yaml --set image.repository=big.docker.repositories.sap.ondemand.com/com.sap.x4-job-service-master/x4-job-service,image.tag=2.0.0,secret.dockerconfigjson=eyJhdXRocyI6eyJiaWcuZG9ja2VyLnJlcG9zaXRvcmllcy5zYXAub25kZW1hbmQuY29tIjp7InVzZXJuYW1lIjoieDQtY2ljZC11c2VyIiwicGFzc3dvcmQiOiJTejdpVnpZZUVHQnYiLCJhdXRoIjoiZURRdFkybGpaQzExYzJWeU9sTjZOMmxXZWxsbFJVZENkZz09In19fQ==
+
+
+helm upgrade xman-deployment k8s/helm/xman --install --namespace xman-system --values Acceptance_values.yaml --set 'image.repository=big.docker.repositories.sap.ondemand.com/com.sap.x4-xman-master/x4-xman,image.tag=2.0.0,secret.dockerconfigjson=eyJhdXRocyI6eyJiaWcuZG9ja2VyLnJlcG9zaXRvcmllcy5zYXAub25kZW1hbmQuY29tIjp7InVzZXJuYW1lIjoieDQtY2ljZC11c2VyIiwicGFzc3dvcmQiOiJTejdpVnpZZUVHQnYiLCJhdXRoIjoiZURRdFkybGpaQzExYzJWeU9sTjZOMmxXZWxsbFJVZENkZz09In19fQ=='

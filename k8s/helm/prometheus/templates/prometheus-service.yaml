@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: x4-prom-svc
+spec:
+  selector:
+    app: x4prometheus
+    purpose: dev
+  ports:
+    - name: promui
+      protocol: TCP
+      port: 9090
+      targetPort: 9090

@@ -1,0 +1,60 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-app
+spec:
+  serviceInstances:
+    - name: lockmanager01
+      serviceName: lockmanager
+      servicePlan: helm
+      parameters: {}
+    - name: jobmanager01
+      serviceName: jobmanager
+      servicePlan: helm
+    - name: bafdb
+      serviceName: azure-postgresql-9-6
+      servicePlan: basic
+      parameters:
+        location: eastus
+        resourceGroup: demo
+        extensions:
+          - uuid-ossp
+          - postgis
+        firewallRules:
+          - startIPAddress: "0.0.0.0"
+            endIPAddress: "255.255.255.255"
+            name: "AllowAll"
+    - name: uaaservice01
+      serviceName: xsuaa
+      servicePlan: basic
+      parameters: {}
+  gateway:
+    hosts:
+      - x4-bc.local
+    tls:
+      credentialName: bookinfo-secret
+  jobmanager:
+    serviceInstance: jobmanager01
+  lockmanager:
+    serviceInstance: lockmanager01
+  approuter:
+    image: ""
+    env:
+      -
+    uaa:
+      serviceInstance: uaaservice
+  database:
+    system:
+      serviceInstance: bafdb
+    repository:
+      serviceInstance: bafdb
+  supportUsers:
+    - SAP_SUPP001
+    - SAP_SUPP002
+    - SAP_SUPP003
+  vcapSecret: ""
+  imagePullSecrets:
+    - cred
+  env:
+    -
+  configuration: {}

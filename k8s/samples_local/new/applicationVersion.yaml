@@ -1,0 +1,11 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4-app-2.0.0
+spec:
+  application: x4-app
+  version: 2.0.0
+  worker:
+    image: docker.wdf.sap.corp:50002/com.sap.x4/x4-samples-snapshot:latest
+  content:
+    image: docker.wdf.sap.corp:50002/com.sap.x4/x4-samples-snapshot:latest

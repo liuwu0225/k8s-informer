@@ -1,0 +1,21 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4-1.0.0
+spec:
+  application: x4-bc-dev
+  version: 1.0.0
+  worker:
+    image: x4:042303
+  content:
+    image: x4:042303
+  env:
+    - name: VCAP_SERVICES
+      valueFrom:
+        secretKeyRef:
+          name: x4-bc-dev-vcap
+          key: content.json
+    - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+      value: "true"
+  supportTickets:
+    - debug01

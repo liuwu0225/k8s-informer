@@ -1,0 +1,246 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: x4apps.x4.sap.com
+  labels:
+    "x4.sap.com/managed-by": "xman"
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: x4.sap.com
+  # list of versions supported by this CustomResourceDefinition
+  versions:
+    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      served: true
+      # One and only one version must be marked as the storage version.
+      storage: true
+  # either Namespaced or Cluster
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: x4apps
+    # singular name to be used as an alias on the CLI and for display
+    singular: x4app
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: X4Application
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+      - xa
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          required:
+            - lockmanager
+            - jobmanager
+            - database
+          properties:
+            lockmanager:
+              type: object
+              required:
+                - from
+                - value
+              properties:
+                from:
+                  enum:
+                  - component
+                  - secret
+                  - serviceInstance
+                  type: string
+                value:
+                  type: string
+            jobmanager:
+              type: object
+              required:
+                - from
+                - value
+              properties:
+                from:
+                  enum:
+                  - component
+                  - secret
+                  - serviceInstance
+                  type: string
+                value:
+                  type: string
+            # saasregistry:
+            #   type: object
+            #   required:
+            #     - from
+            #     - value
+            #   properties:
+            #     from:
+            #       type: string
+            #     value:
+            #       type: string
+            database:
+              type: object
+              required:
+                - from
+                - value
+              properties:
+                from:
+                  enum:
+                  - component
+                  - service
+                  type: string
+                value:
+                  type: string
+            uaa:
+              type: object
+              required:
+                - from
+                - value
+              properties:
+                from:
+                  type: string
+                value:
+                  type: string
+            auditlog:
+              type: object
+              required:
+                - from
+                - value
+              properties:
+                from:
+                  type: string
+                value:
+                  type: string
+            # destination:
+            #   type: object
+            #   required:
+            #     - from
+            #     - value
+            #   properties:
+            #     from:
+            #       type: string
+            #     value:
+            #       type: string
+            # transportation:
+            #   type: object
+            #   required:
+            #     - from
+            #     - value
+            #   properties:
+            #     from:
+            #       type: string
+            #     value:
+            #       type: string
+            # certificateservice:
+            #   type: object
+            #   required:
+            #     - from
+            #     - value
+            #   properties:
+            #     from:
+            #       type: string
+            #     value:
+            #       type: string
+            components:
+              type: array
+              items:
+                format: string
+                type: object
+                required:
+                  - name
+                  - type
+                  - image
+                properties:
+                  name:
+                    type: string
+                  type:
+                    type: string
+                  image:
+                    type: string
+                  replicas:
+                    type: integer
+                  database:
+                    type: object
+                    required:
+                      - from
+                      - value
+                    properties:
+                      from:
+                        type: string
+                      value:
+                        type: string
+                  resources:
+                    type: object
+                    properties:
+                      requests:
+                        type: object
+                        properties:
+                          memory:
+                            type: string
+                          cpu:
+                            type: string
+                      limits:
+                        type: object
+                        properties:
+                          memory:
+                            type: string
+                          cpu:
+                            type: string
+            serviceInstances:
+              type: array
+              items:
+                format: string
+                type: object
+                required:
+                  - name
+                  - serviceName
+                  - servicePlan
+                properties:
+                  name:
+                    type: string
+                  serviceName:
+                    type: string
+                    pattern: "[a-z]([-a-z0-9]*[a-z0-9])?"
+                  servicePlan:
+                    type: string
+                  parameters:
+                    type: object
+            gateway:
+              type: object
+              required:
+                - host
+              properties:
+                host:
+                  type: string
+                tlsSecretName:
+                  type: string
+                timeout:
+                  type: integer
+                  description: HTTP request timeout (ms)
+            supportUsers:
+              type: array   
+              items:
+                format: string
+                type: string
+            imagePullSecrets:
+              type: array   
+              items:
+                format: string
+                type: string            
+            env:
+              type: array   
+              items:
+                format: string
+                type: object
+            configuration:
+              type: object             
+  subresources:
+    # status enables the status subresource.
+    status:
+      phase: initial
+  additionalPrinterColumns:
+    - name: host
+      type: string
+      description: The host
+      JSONPath: .spec.gateway.host
+    - name: status
+      type: string
+      description: Status of X4 application
+      JSONPath: .status.phase
+

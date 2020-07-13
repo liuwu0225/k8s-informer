@@ -1,0 +1,11 @@
+apiVersion: x4.sap.com/v1
+kind: X4Tenant
+metadata:
+  name: cbc-test-tenant-01
+  namespace: x4-bc-local
+spec:
+  tenant: cbc-test-tenant-01
+  role: OS001
+  application: x4-bc-local
+  subdomain: cbc-test-01
+  configuration: {}

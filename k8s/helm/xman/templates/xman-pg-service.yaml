@@ -1,0 +1,21 @@
+{{- if and (.Values.xman_pg) (not .Values.serviceCatalog.enabled)}}
+{{- if and (.Values.xman_pg.db_user) (.Values.xman_pg.db_password) }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: xman-pg-service
+  labels:
+    app: xman-pg-service
+spec:
+  ports:
+  - name: tcp-pg-port
+    protocol: TCP
+    port: 5432
+    targetPort: tcp-pg-port
+  selector:
+    app: xman-pg
+  type: ClusterIP
+  sessionAffinity: None
+{{- end }}
+{{- end }}

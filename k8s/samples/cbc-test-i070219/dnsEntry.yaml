@@ -1,0 +1,10 @@
+apiVersion: dns.gardener.cloud/v1alpha1
+kind: DNSEntry
+metadata:
+  name: wildcard
+spec:
+  dnsName: "*.cbc-i070219.cbc.c.eu-nl-1.cloud.sap"
+  ttl: 600
+  cnameLookupInterval: 30
+  targets:
+    - public-ingress.cbc.c.eu-nl-1.cloud.sap

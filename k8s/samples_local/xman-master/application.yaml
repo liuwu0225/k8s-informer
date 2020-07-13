@@ -1,0 +1,48 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4-bc-xman
+spec:
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  database:
+    from: component
+    value: bafdb
+  # uaa:
+  #   from: secret
+  #   value: x4-bc-dev-vcap
+  # auditlog:
+  #   from: secret
+  #   value: auditlogservice
+  components:
+    - name: bafdb
+      type: postgres
+      image: postgres:10
+    - name: lockmanager01
+      type: lockmanager
+      image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-lock-manager:1.1.7
+    - name: jobmanager01
+      type: jobmanager
+      image: big.docker.repositories.sap.ondemand.com/com.sap.x4-job-manager-master/x4-job-manager:2.0.0
+      database:
+        from: component
+        value: bafdb
+  gateway:
+    host: x4-bc-xman.x4-sample-master.xman.eu.one.cloud.sap
+  supportUsers:
+    - yu.yu01@sap.com
+  imagePullSecrets:
+    - regcred
+  env:
+    - name: "VCAP_SERVICES"
+      valueFrom:
+        secretKeyRef:
+          name: x4-bc-dev-vcap
+          key: content.json
+    - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+      value: "true"
+  configuration: {}

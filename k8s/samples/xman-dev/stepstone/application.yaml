@@ -1,0 +1,57 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: stepstone
+spec:
+  components:
+    - name: bafdb
+      type: postgres
+      image: big.docker.repositories.sap.ondemand.com/bigdb:latest
+    - name: lockmanager01
+      type: lockmanager
+      image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-lock-manager:1.1.7
+    - name: jobmanager01
+      type: jobmanager
+      image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-job-manager:1.1.0
+      database:
+        from: component
+        value: bafdb
+  # serviceInstances:
+  #   - name: bafdb
+  #     serviceName: azure-postgresql-9-6
+  #     servicePlan: basic
+  #     parameters:
+  #       location: eastus
+  #       resourceGroup: demo
+  #       extensions:
+  #         - uuid-ossp
+  #         - postgis
+  #       firewallRules:
+  #         - startIPAddress: "0.0.0.0"
+  #           endIPAddress: "255.255.255.255"
+  #           name: "AllowAll"
+  database:
+    from: component
+    value: bafdb
+  jobmanager:
+    from: component
+    value: jobmanager01
+  lockmanager:
+    from: component
+    value: lockmanager01
+  uaa:
+    from: secret
+    value: x4demo-vcap-secret
+  gateway:
+    host: x4-stepstone-xman.x4-sample-dev.xman.eu.one.cloud.sap
+  supportUsers:
+    - yu.yu01@sap.com
+  imagePullSecrets:
+    - regcred
+  env:
+    - name: "VCAP_SERVICES"
+      valueFrom:
+        secretKeyRef:
+          name: x4demo-vcap-secret
+          key: content.json
+  configuration: {}

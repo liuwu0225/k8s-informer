@@ -1,0 +1,96 @@
+# Case1: provision postgres for jobmanager, postgres for X4 system and repository, redis for lockmanager, uaa service for login via service catalog.
+apiVersion: 'x4.sap.com/v1'
+kind: X4Application
+metadata:
+    name: x4-app
+spec:
+    # baf application artifacts
+    jobmanager:
+        component: jobmanager01
+    lockmanager:
+        component: lockmanager01
+    #  approuter:  move to application version
+    #    image: ""
+    #    env:
+    #      -
+    saasregistry:
+        serviceInstance: saasregservice
+    database:
+        serviceInstance: bafdb
+    uaa:
+        serviceInstance: uaaservice
+    auditlog:
+        serviceInstance: auditlogservice
+    destination:
+        serviceInstance: destinationservice
+    transportation:
+        serviceInstance: transportationservice
+    certificateservice:
+        serviceInstance: certificateservice
+    # ...
+    # baf appliction components
+    components:
+        - name: lockmanager01
+          type: lockmanager
+          image: docker.wdf.sap.corp:50000/com.sap.x4/x4-lock-manager:1.1.5
+          database:
+              serviceInstance: lockmanagerredis01
+        - name: jobmanager01
+          type: jobmanager
+          image: docker.wdf.sap.corp:50000/com.sap.x4/x4-job-manager:1.1.0
+          database:
+              serviceInstance: jobmanagerdb01
+    serviceInstances:
+        - name: lockmanagerredis01
+          serviceName: azure-redis
+          servicePlan: basic
+          parameters: {}
+        - name: jobmanagerdb01
+          serviceName: azure-postgresql-9-6
+          servicePlan: basic
+          parameters:
+              location: eastus
+              resourceGroup: demo
+              extensions:
+                  - uuid-ossp
+                  - postgis
+              firewallRules:
+                  - startIPAddress: '0.0.0.0'
+                    endIPAddress: '255.255.255.255'
+                    name: 'AllowAll'
+        - name: bafdb
+          serviceName: azure-postgresql-9-6
+          servicePlan: basic
+          parameters:
+              location: eastus
+              resourceGroup: demo
+              extensions:
+                  - uuid-ossp
+                  - postgis
+              firewallRules:
+                  - startIPAddress: '0.0.0.0'
+                    endIPAddress: '255.255.255.255'
+                    name: 'AllowAll'
+        - name: uaaservice01
+          serviceName: xsuaa
+          servicePlan: broker
+          parameters: {}
+    gateway:
+        hosts:
+            - x4-bc.local
+        tls:
+            credentialName: bookinfo-secret
+
+    supportUsers:
+        - SAP_SUPP001
+        - SAP_SUPP002
+        - SAP_SUPP003
+    #  vcapSecret: "" remove
+    imagePullSecrets:
+        - cred
+    # secrets need to be defined before by ops and can be added as secret reference under the environment
+    # to be clarified how to handle the conciliation. Automatically by XMAN with a rolling update like for the Approuter?
+    env:
+        - ""
+    # configuration which will be imported into the system schema of the application
+    configuration: {}

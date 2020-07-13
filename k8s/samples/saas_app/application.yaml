@@ -1,0 +1,27 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Application
+metadata:
+  name: x4demo
+spec:
+  host: x4-sample.xman.eu.one.cloud.sap
+  dbtype: POSTGRES
+  lock-manager:
+    image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-lock-manager:1.1.5
+  job-manager:
+    image: big.docker.repositories.sap.ondemand.com/com.sap.x4/x4-job-manager:1.1.0
+  approuter:
+    image: build-milestones.docker.repositories.sap.ondemand.com/com.sap.html5.apps/approuter-6.7:6.7.0
+  secrets:
+    imagePull: regcred
+    vcap: x4demo-vcap-secret
+  support-users: yu.yu01@sap.com
+  service-catalog:
+    enabled: true
+  configuration:
+    http://sap.com/x4-core:
+      enableJSONFormat: true
+      loglevel: info
+    http://sap.com/x4/idm:
+      MaintenanceWindow:
+        startDateTime: 2019-12-19T00:00:00Z
+        endDateTime: 2019-12-19T01:00:00Z

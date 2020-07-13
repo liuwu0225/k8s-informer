@@ -1,0 +1,23 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4ApplicationVersion
+metadata:
+  name: x4-bc-dev-2.0.1
+spec:
+  application: x4-bc-1
+  version: 2.0.1
+  worker:
+    image: big.docker.repositories.sap.ondemand.com/internal-xman-upgrade-test:0.1.0
+  content:
+    image: big.docker.repositories.sap.ondemand.com/internal-xman-upgrade-test:0.1.0
+  env:
+    - name: VCAP_SERVICES
+      valueFrom:
+        secretKeyRef:
+          name: x4-bc-dev-vcap
+          key: content.json
+    - name: ENABLE_SAP_INTERNAL_CAPABILITIES
+      value: "true"
+  # supportTickets:
+  #   - debug01
+  # approuter:
+  #   image: docker.wdf.sap.corp:50000/com.sap.html5.apps/approuter-6.7:6.7.0

@@ -1,0 +1,10 @@
+{{- if (.Values.serviceCatalog.enabled)}}
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: xman-pg-service-binding
+spec:
+  instanceRef:
+    name: xman-pg-service-instance
+  secretName: xman-pg-secret
+{{- end }}

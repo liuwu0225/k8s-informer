@@ -1,0 +1,10 @@
+apiVersion: dns.gardener.cloud/v1alpha1
+kind: DNSEntry
+metadata:
+  name: wildcard
+spec:
+  dnsName: "*.x4-stepstone-xman.x4-sample-dev.xman.eu.one.cloud.sap"
+  ttl: 600
+  cnameLookupInterval: 30
+  targets:
+    - public-ingress.xman-dev.clusters.eu.one.cloud.sap

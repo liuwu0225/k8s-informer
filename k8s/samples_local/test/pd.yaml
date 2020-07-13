@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pd
+spec:
+  restartPolicy: OnFailure
+  containers:
+    - image: nginx
+      imagePullPolicy: IfNotPresent
+      name: test-container
+      volumeMounts:
+        - mountPath: /test-pd
+          name: test-volume
+      command:
+        - "sh"
+        - "-c"
+        - "npm run teee"
+      # lifecycle:
+      #   postStart:
+      #     exec:
+      #       command:
+      #         - "sh"
+      #         - "-c"
+      #         - "touch /test-pd/postStart"
+      #   preStop:
+      #     exec:
+      #       command:
+      #         - "sh"
+      #         - "-c"
+      #         - "touch /test-pd/preStop"
+  volumes:
+    - name: test-volume
+      hostPath:
+        path: /tmp
+        type: Directory

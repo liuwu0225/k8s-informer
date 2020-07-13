@@ -1,0 +1,29 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: xman-app-svc
+  selfLink: "/api/v1/namespaces/default/services/xman-app-svc"
+  labels:
+    app.kubernetes.io/name: xman-app
+    app.kubernetes.io/instance: xman-app
+    app.kubernetes.io/managed-by: xman
+    app: xman-app
+spec:
+  ports:
+    - name: http-xman-svc
+      protocol: TCP
+      port: 80
+      targetPort: http-xman-port
+    - name: https-xman-svc
+      protocol: TCP
+      port: 443
+      targetPort: https-xman-port
+    - name: http-ide-svc
+      protocol: TCP
+      port: 81
+      targetPort: http-ide-port  
+  selector:
+    app: xman-app
+  type: ClusterIP
+  sessionAffinity: None

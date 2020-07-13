@@ -1,0 +1,12 @@
+apiVersion: "x4.sap.com/v1"
+kind: X4Tenant
+metadata:
+  name: stepstone-tenant-02
+spec:
+  tenant: tenant02
+  role: OS001
+  application: stepstone
+  subdomain: test-02
+  configuration:
+    http://sap.com/x4/admin:
+      debugLog: ""

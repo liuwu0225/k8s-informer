@@ -1,0 +1,107 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: x4-cleanup-old-applicationversion-1
+  namespace: xman-system
+spec:
+  schedule: "*/13 * * * *" # Every minute
+  startingDeadlineSeconds: 0
+  concurrencyPolicy: "Replace" # Default to "Allow"
+  successfulJobsHistoryLimit: 4 # Default 3
+  failedJobsHistoryLimit: 4 # Default 1
+  suspend: false # Set to "true" to suspend scheduling
+  workflowSpec:
+    imagePullSecrets:
+      - name: regcred
+    entrypoint: main
+    templates:
+      - name: main
+        dag:
+          tasks:
+            - name: cleanup-unused-appvers
+              template: xman
+
+      - name: xman
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+          labels:
+            x4.sap.com/disable-karydia: "true"
+        automountServiceAccountToken: true
+        serviceAccount: xman-operator
+        serviceAccountName: xman-operator
+        executor:
+          serviceAccountName: argo-workflow
+        container:
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+          args:
+            - npm run clean:unusedAppvers
+          envFrom:
+            - configMapRef:
+                name: xman-app-config
+          env:
+        {{- if (or (eq .Values.serviceCatalog.provider "azure") (not .Values.serviceCatalog.enabled)) }}
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: host
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: port
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: database
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: password
+            - name: DB_SSL_REQUIRED
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: sslRequired             
+        {{- else if (eq .Values.serviceCatalog.provider "aws") }} 
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: ENDPOINT_ADDRESS
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: PORT                   
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: DB_NAME                     
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: MASTER_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: xman-pg-secret
+                  key: MASTER_PASSWORD 
+            - name: DB_SSL_REQUIRED
+              value: "true"
+        {{- end }}
+

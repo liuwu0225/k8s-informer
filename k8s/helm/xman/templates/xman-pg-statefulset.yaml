@@ -1,0 +1,75 @@
+{{- if and (.Values.xman_pg) (not .Values.serviceCatalog.enabled) }}
+{{- if .Values.xman_pg.image }}
+{{- if and (.Values.xman_pg.image.repository) (.Values.xman_pg.image.tag) }}
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: xman-pg-statefulset
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xman-pg
+  template:
+    metadata:
+      labels:
+        app: xman-pg
+        version: v1
+    spec:
+      containers:
+      - name: xman-pg
+        image: "{{ .Values.xman_pg.image.repository }}:{{ .Values.xman_pg.image.tag }}"
+        ports:
+        - name: tcp-pg-port
+          containerPort: 5432
+          protocol: TCP
+        env:
+        - name: PGDATA
+          value: "/var/lib/postgresql/data/pgdata"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: xman-pg-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: xman-pg-secret
+              key: password
+        resources: {}
+        volumeMounts:
+        - name: x4-pg-data
+          mountPath: "/var/lib/postgresql/data"
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      imagePullSecrets:
+      - name: regcred
+      schedulerName: default-scheduler
+  volumeClaimTemplates:
+  - metadata:
+      name: x4-pg-data
+      creationTimestamp: 
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: {{ .Values.xman_pg.db_volume_size | default "10Gi" }}
+      volumeMode: Filesystem
+      dataSource:
+      {{- if .Values.xman_pg.storageClassName }}
+      storageClassName: {{ .Values.x4_pg.storageClassName }}
+      {{- end }}      
+  serviceName: xman-pg-svc
+  podManagementPolicy: OrderedReady
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  revisionHistoryLimit: 10
+{{- end }}
+{{- end }}
+{{- end }}

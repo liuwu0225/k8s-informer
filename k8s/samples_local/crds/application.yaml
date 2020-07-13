@@ -1,0 +1,96 @@
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: x4apps.x4.sap.com
+  labels:
+    "x4.sap.com/managed-by": "xman"
+spec:
+  # group name to use for REST API: /apis/<group>/<version>
+  group: x4.sap.com
+  # list of versions supported by this CustomResourceDefinition
+  versions:
+    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      served: true
+      # One and only one version must be marked as the storage version.
+      storage: true
+  # either Namespaced or Cluster
+  scope: Namespaced
+  names:
+    # plural name to be used in the URL: /apis/<group>/<version>/<plural>
+    plural: x4apps
+    # singular name to be used as an alias on the CLI and for display
+    singular: x4app
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    kind: X4Application
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+      - xa
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          required:
+            - host
+            - dbtype
+            - lock-manager
+            - job-manager
+            - configuration
+          properties:
+            secrets:
+              type: object
+              properties:
+                host:
+                  type: string
+                vcap:
+                  type: string
+                imagePull:
+                  type: string
+            host:
+              type: string
+            dbtype:
+              type: string
+              description: "Database type of X4 Application [HANA] or [POSTGRES]"
+              pattern: "^HANA$|POSTGRES$"
+              example: "sme-express.sap.com"
+            lock-manager:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+            job-manager:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+            approuter:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+            configuration:
+              type: object
+  subresources:
+    # status enables the status subresource.
+    status:
+      phase: initial
+  additionalPrinterColumns:
+    - name: host
+      type: string
+      description: The host
+      JSONPath: .spec.host
+    - name: dbtype
+      type: string
+      description: The database type
+      JSONPath: .spec.dbtype
+    - name: status
+      type: string
+      description: Status of X4 application
+      JSONPath: .status.phase
