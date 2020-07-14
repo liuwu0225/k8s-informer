@@ -1,21 +1,29 @@
 import _ from "lodash";
-
-export interface QueueInterface {
-  add(key: string): void;
-  get(): string;
-  done(key): void;
+import PQueue from "p-queue";
+export interface QueueItem {
+  key: string,
+  func: () => unknown
 }
-export default class Queue implements QueueInterface {
-  private queue: string[] = [];
+export default class Queue {
+  private items: QueueItem[] = [];
   private deduplicate: boolean = true;
+  private queue: PQueue;
   constructor(deduplicate: boolean = true) {
     this.deduplicate = deduplicate;
+    this.queue = new PQueue({ concurrency: 1 });
   }
-  add(key: string): void {
+  start(): void {
+    this.queue.start()
+  }
+  add(item: QueueItem): void {
     if (this.deduplicate) {
-      if (_.indexOf(this.queue, key) > -1) return;
+      if (_.find(this.items, data => {
+        return data.key === item.key
+      })) return;
     }
-    this.queue.push(key);
+
+    this.items.push(item)
+    this.queue.add(item.func);
   }
   get(): string {
     return this.queue[0];
