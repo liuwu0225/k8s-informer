@@ -1,7 +1,7 @@
 apiVersion: "x4.sap.com/v1"
 kind: X4Application
 metadata:
-  name: x4-bc-local1
+  name: x4-bc-local
 spec:
   # baf application artifacts
   jobmanager:
@@ -44,7 +44,7 @@ spec:
         from: component
         value: bafdb
   gateway:
-    host: x4-bc-local1.xman.local.127.0.0.1.nip.io
+    host: x4-bc-local.xman.local.127.0.0.1.nip.io
     # host: x4-bc.x4-sample-dev.xman.eu.one.cloud.sap
   supportUsers:
     - yu.yu01@sap.com

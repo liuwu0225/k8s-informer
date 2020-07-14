@@ -1,13 +1,13 @@
 apiVersion: "x4.sap.com/v1"
 kind: X4ApplicationVersion
 metadata:
-  name: x4-bc-dev-2.0.13
+  name: x4-bc-dev-2.0.1
 spec:
   application: x4-bc-local
-  version: 2.0.13
+  version: 2.0.1
   worker:
     image: big.docker.repositories.sap.ondemand.com/internal-xman-upgrade-test:0.1.0
-    replicas: 2
+    replicas: 1
   content:
     image: big.docker.repositories.sap.ondemand.com/internal-xman-upgrade-test:0.1.0
   env:

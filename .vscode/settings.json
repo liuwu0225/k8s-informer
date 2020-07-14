@@ -1,30 +1,30 @@
-// {
-//   "editor.tabSize": 2,
-//   "files.eol": "\n",
-//   "search.exclude": {
-//     "**/node_modules": true,
-//     "**/bower_components": true,
-//     "**/dist": true,
-//     "**/coverge": true
-//   },
-//   "typescript.referencesCodeLens.enabled": true,
-//   "tslint.ignoreDefinitionFiles": false,
-//   "tslint.ban-types": false,
-//   "editor.codeActionsOnSave": {
-//     "source.fixAll.tslint": true
-//   },
-//   "tslint.exclude": "**/node_modules/**/*",
-//   "editor.formatOnSave": true,
-//   "[javascript]": {
-//     "editor.formatOnSave": true,
-//     "editor.formatOnPaste": false
-//   },
-//   "[javascriptreact]": {
-//     "editor.formatOnSave": true,
-//     "editor.formatOnPaste": false
-//   },
-//   "[typescript]": {
-//     "editor.formatOnSave": true,
-//     "editor.formatOnPaste": false
-//   }
-// }
+{
+  "editor.tabSize": 4,
+  "files.eol": "\n",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/dist": true,
+    "**/coverge": true
+  },
+  "typescript.referencesCodeLens.enabled": true,
+  "tslint.ignoreDefinitionFiles": false,
+  "tslint.ban-types": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.tslint": true
+  },
+  "tslint.exclude": "**/node_modules/**/*",
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  }
+}
