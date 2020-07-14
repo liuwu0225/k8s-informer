@@ -1,16 +1,8 @@
 import Informer from "./base";
 import * as k8s from "@kubernetes/client-node";
-import Queue from "../utils/queue";
 import _ from "lodash";
 
 export default class ApplicationInformer extends Informer {
-  constructor(kc: k8s.KubeConfig) {
-    super();
-    this.kc = kc;
-    this.k8sCustomObjectsApi = kc.makeApiClient(k8s.CustomObjectsApi);
-    this.queue = new Queue();
-    this.init();
-  }
   init(): void {
     // wrap k8sCustomObjectsApi.listClusterCustomObject, return type match k8s.makeInformer listPromiseFn
     const listFn = async () => {
@@ -37,9 +29,38 @@ export default class ApplicationInformer extends Informer {
     );
 
     // add informer envent handler
-    this.informer.on("add", this.addFunc);
-    this.informer.on("update", this.updateFunc);
-    this.informer.on("delete", this.deleteFunc);
-    this.informer.on("error", this.errorFunc);
+    this.informer.on("add", this.addFunc.bind(this));
+    this.informer.on("update", this.updateFunc.bind(this));
+    this.informer.on("delete", this.deleteFunc.bind(this));
+    this.informer.on("error", this.errorFunc.bind(this));
+  }
+  addFunc(obj: object): void {
+    // console.log(this.generateKey(obj));
+    this.queue.add(() => {
+      console.log(`Added: ${this.generateKey(obj)}`);
+    });
+  }
+  updateFunc(obj: object): void {
+    this.queue.add(() => {
+      console.log(`Updated: ${this.generateKey(obj)}`);
+    });
+  }
+  deleteFunc(obj: object): void {
+    this.queue.add(() => {
+      console.log(`Deleted: ${this.generateKey(obj)}`);
+    });
+  }
+  errorFunc(err: object): void {
+    console.error(err);
+    // Restart informer after 5sec
+    setTimeout(() => {
+      this.informer.start();
+    }, 5000);
+  }
+  generateKey(obj: object): string {
+    return `/apis/x4.sap.com/v1/x4apps/${_.get(
+      obj,
+      "metadata.namespace"
+    )}/${_.get(obj, "metadata.name")}`;
   }
 }

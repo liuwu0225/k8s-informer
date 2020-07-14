@@ -1,16 +1,8 @@
 import Informer from "./base";
 import * as k8s from "@kubernetes/client-node";
-import Queue from "../utils/queue";
 import _ from "lodash";
 
 export default class ApplicationVersionInformer extends Informer {
-  constructor(kc: k8s.KubeConfig) {
-    super();
-    this.kc = kc;
-    this.k8sCustomObjectsApi = kc.makeApiClient(k8s.CustomObjectsApi);
-    this.queue = new Queue();
-    this.init();
-  }
   init(): void {
     // wrap k8sCustomObjectsApi.listClusterCustomObject, return type match k8s.makeInformer listPromiseFn
     const listFn = async () => {
@@ -41,5 +33,37 @@ export default class ApplicationVersionInformer extends Informer {
     this.informer.on("update", this.updateFunc);
     this.informer.on("delete", this.deleteFunc);
     this.informer.on("error", this.errorFunc);
+  }
+
+  addFunc(obj: object): void {
+    console.log(
+      `Added: ${_.get(obj, "metadata.namespace")}/${_.get(
+        obj,
+        "metadata.name"
+      )}`
+    );
+  }
+  updateFunc(obj: object): void {
+    console.log(
+      `Updated: ${_.get(obj, "metadata.namespace")}/${_.get(
+        obj,
+        "metadata.name"
+      )}`
+    );
+  }
+  deleteFunc(obj: object): void {
+    console.log(
+      `Deleted: ${_.get(obj, "metadata.namespace")}/${_.get(
+        obj,
+        "metadata.name"
+      )}`
+    );
+  }
+  errorFunc(err: object): void {
+    console.error(err);
+    // Restart informer after 5sec
+    setTimeout(() => {
+      this.informer.start();
+    }, 5000);
   }
 }
