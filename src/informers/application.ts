@@ -1,4 +1,4 @@
-import Informer from "./base";
+import Informer from "./informer";
 import * as k8s from "@kubernetes/client-node";
 import _ from "lodash";
 

@@ -1,8 +1,8 @@
 import _ from "lodash";
 import PQueue from "p-queue";
 export interface QueueItem {
-  key: string,
-  func: () => unknown
+  key: string;
+  func: () => unknown;
 }
 export default class Queue {
   private items: QueueItem[] = [];
@@ -13,24 +13,27 @@ export default class Queue {
     this.queue = new PQueue({ concurrency: 1 });
   }
   start(): void {
-    this.queue.start()
+    this.queue.start();
   }
   add(item: QueueItem): void {
     if (this.deduplicate) {
-      if (_.find(this.items, data => {
-        return data.key === item.key
-      })) return;
+      if (
+        _.find(this.items, (data) => {
+          return data.key === item.key;
+        })
+      )
+        return;
     }
 
-    this.items.push(item)
+    this.items.push(item);
     this.queue.add(item.func);
   }
-  get(): string {
-    return this.queue[0];
+  get(): QueueItem {
+    return this.items[0];
   }
   done(key: string): void {
-    _.remove(this.queue, (k) => {
-      return k === key;
+    _.remove(this.items, (item) => {
+      return item.key === key;
     });
   }
 }
