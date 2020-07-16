@@ -6,10 +6,7 @@ interface BaseControllerInterface {
   sync(): void;
 }
 export default class BaseController implements BaseControllerInterface {
-  protected informer: Informer;
-  constructor() {
-    this.initInformer();
-  }
+  constructor() {}
   initInformer(): void {}
   start(): void {}
   sync(): void {}
