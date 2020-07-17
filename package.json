@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "debug": "node -r ts-node/register --inspect-brk=9228 src/server.ts"
+    "debug": "node -r ts-node/register --inspect-brk=9226 ./src/server.ts"
   },
   "author": "",
   "license": "ISC",
